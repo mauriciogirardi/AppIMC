@@ -1,76 +1,74 @@
-const btnCalcElemento = document.querySelector('button')
-const resEl = document.querySelector('#res')
+const form = document.querySelector('#formulario');
 
-function calcularImc(event) {
-    event.preventDefault()
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
 
-    resEl.innerHTML = ''
+    const pesoElement = document.querySelector('#peso');
+    const alturaElement = document.querySelector('#altura');
 
-    const pesoElment = document.querySelector('#peso')
-    const alturaElement = document.querySelector('#altura')
+    const peso = Number(pesoElement.value);
+    const altura = Number(alturaElement.value);
 
-    if (pesoElment.value === '' || alturaElement.value === '') {
-    
-        if (pesoElment.value === '') {
-            pesoElment.style.border = '2px solid red'
-        } else if (alturaElement.value === '') {
-            alturaElement.style.border = '2px solid red'
-        }
-        
-    } else {
-        
-        pesoElment.style.border = '1px solid #ccc'
-        alturaElement.style.border = '1px solid #ccc'
-
-        const resutadoImc = pesoElment.value / (alturaElement.value * alturaElement.value)
-
-        const p = document.createElement('p')   
-        resEl.appendChild(p)
-
-        p.style.backgroundColor = 'rgb(253, 128, 82)'
-        p.style.marginTop = '20px'
-        p.style.padding = '10px 3px'
-
-        if (resutadoImc < 18.5) {
-
-            let textRes = document.createTextNode('Seu IMC é: ' + Math.round(resutadoImc) + ' (abaixo do peso!)')
-            p.appendChild(textRes)
-
-        } else if (resutadoImc >= 18.5 && resutadoImc <= 24.9) {
-
-            let textRes = document.createTextNode('Seu IMC é: ' + Math.round(resutadoImc) + ' (Peso normal!)')
-            p.appendChild(textRes)
-
-        } else if (resutadoImc >= 25 && resutadoImc <= 29.9) {
-
-            let textRes = document.createTextNode('Seu IMC é: ' + Math.round(resutadoImc) + ' (Sobrepeso)')
-            p.appendChild(textRes)
-
-        } else if (resutadoImc >= 30 && resutadoImc <= 34.9) {
-
-            let textRes = document.createTextNode('Seu IMC é: ' + Math.round(resutadoImc) + ' (Obesidade gra 1!)')
-            p.appendChild(textRes)
-
-        } else if (resutadoImc >= 35 && resutadoImc <= 39.3) {
-
-            let textRes = document.createTextNode('Seu IMC é: ' + Math.round(resutadoImc) + ' (Obesidade gra 2!)')
-            p.appendChild(textRes)
-
-        } else {
-
-            let textRes = document.createTextNode('Seu IMC é: ' + Math.round(resutadoImc) + ' (Obesidade gra 3!)')
-            p.appendChild(textRes)
-
-        }
-    
-        pesoElment.value = ''
-        alturaElement.value = ''
-
+    //validação
+    if (!peso) {
+        setResultado('Peso inválido', false);
+        return;
     }
+
+    if (!altura) {
+        setResultado('Altura inválido', false);
+        return;
+    }
+
+    //calculo do imc
+    const imc = peso / (altura * altura);
+    const res = imc.toFixed(2);
+
+    const nivelImc = getNivelImc(imc)
+
+    const msg = `Seu IMC é: ${res} (${nivelImc})`
+
+    setResultado(msg, true)
+
+    clear()
+});
+
+function getNivelImc(imc) {
+
+    const nivel = ['Abaixo do peso','Peso normal','Sobrepeso','Obesidade grau 1','Obesidade grau 2','Obesidade grau 3'];
+
+    if (imc >= 39.9) return nivel[5];
+    if (imc >= 34.9) return nivel[4];
+    if (imc >= 29.9) return nivel[3];
+    if (imc >= 24.9) return nivel[2];
+    if (imc >= 18.5) return nivel[1];
+    if (imc <  18.5) return nivel[0];
+    
 
 }
 
-btnCalcElemento.onclick = calcularImc
+function criaElementoP() {
+    const p = document.createElement('p');
+    return p;
+};
 
+function setResultado(msg, isValid) {
 
+    const resultado = document.querySelector('#resultado');
+    resultado.innerHTML = '';
 
+    const p = criaElementoP();
+    p.innerHTML = msg;
+    resultado.appendChild(p);
+    
+    if (isValid) {
+        p.classList.add('res')
+    } else {
+        p.classList.add('res-erro')
+    }
+};
+
+function clear() {
+    const pesoElement = document.querySelector('#peso').value = ''
+    const alturaElement = document.querySelector('#altura').value = ''
+}
