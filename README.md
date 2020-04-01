@@ -9,9 +9,6 @@ para treinar um pouco de javascript e brincar.
 </br>
 </br>
 
-Calcule sei IMC :   https://mauriciogirardi.github.io/AppIMC/
+Calcule sei IMC :https://mauriciogirardi.github.io/AppIMC/</br>
 
-</br>
 ![landingpage do site](https://github.com/mauriciogirardi/AppIMC/blob/master/tabelaImc.png)
-
-
